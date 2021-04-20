@@ -86,7 +86,7 @@ class sellThread implements Runnable {
         try {
             System.out.println("I am just sleeping 1000ms");
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)  {
             e.printStackTrace();
         }
         product.sell();
