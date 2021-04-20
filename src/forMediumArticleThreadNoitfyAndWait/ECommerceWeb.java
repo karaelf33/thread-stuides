@@ -1,5 +1,7 @@
 package forMediumArticleThreadNoitfyAndWait;
 
+import colorCode.ThreadColors;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,33 +10,43 @@ public class ECommerceWeb {
     public static void main(String[] args) {
         ShoppingCard shoppingCard = new ShoppingCard();
         new Thread(new checkProduct(shoppingCard)).start();
-        new Thread(new addProductToCard(shoppingCard)).start();
         new Thread(new notifyToCargoCompany(shoppingCard)).start();
     }
 }
 
 class ShoppingCard {
 
-    ArrayList<String> products = new ArrayList<>();
+    ArrayList<String> productsForSendCargoCompany = new ArrayList<>();
+    String[] product={"macbook","toshiba","monster","hp","samsung"};
 
 
     public synchronized void isSoldProductsInBasket() {
-        if (products.isEmpty()) {
-            try {
-                System.out.println("Basket is empty please add  product to cart ");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("please send to cargo company is product");
+        System.out.println("1 girdim");
+
+        for (int i=0;i<product.length;i++){
+            productsForSendCargoCompany.add(product[i]);
+            System.out.println(ThreadColors.Magenta+product[i]+":added basket.please send this to the cargo company");
             notifyAll();
+            if (productsForSendCargoCompany.isEmpty()) {
+                try {
+                    System.out.println("Basket is empty please add  product to cart ");
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("please send to cargo company is product");
+                notifyAll();
+            }
         }
+
 
     }
 
     public synchronized void notifyCargoCompany() {
-        if (products.isEmpty()) {
+        System.out.println("2 girdim");
+
+        if (productsForSendCargoCompany.isEmpty()) {
             try {
                 System.out.println("Please add product to cart");
                 wait();
@@ -42,30 +54,8 @@ class ShoppingCard {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("sfdfs");
-            System.out.println(products.remove(0) + "product sent to cargo company");
+            System.out.println(productsForSendCargoCompany.remove(0) + "product sent to cargo company");
             notifyAll();
-        }
-
-
-    }
-
-    public synchronized void addProductToCard() {
-        if (products.isEmpty()) {
-            System.out.println("Add Product To Cart");
-            Scanner product = new Scanner(System.in);
-            String item = product.nextLine();
-            products.add(item);
-            System.out.println(item+"Product added to Card");
-            notifyAll();
-
-        } else {
-            try {
-                System.out.println("Product already have in card");
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
         }
 
 
@@ -107,23 +97,5 @@ class notifyToCargoCompany implements Runnable {
             e.printStackTrace();
         }
         shoppingCard.notifyCargoCompany();
-    }
-}
-
-class addProductToCard implements Runnable {
-    ShoppingCard shoppingCard;
-
-    public addProductToCard(ShoppingCard shoppingCard) {
-        this.shoppingCard = shoppingCard;
-    }
-
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        shoppingCard.addProductToCard();
     }
 }
