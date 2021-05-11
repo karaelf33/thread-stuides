@@ -12,6 +12,8 @@ public class Main {
         Thread threadWrite = new Thread(new doWrite(message));
         threadRead.start();
         threadWrite.start();
+
+
     }
 }
 

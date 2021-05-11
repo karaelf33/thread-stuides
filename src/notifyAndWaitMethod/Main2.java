@@ -4,7 +4,7 @@ import colorCode.ThreadColors;
 
 import java.util.ArrayList;
 
-public class Main2 {
+public class  Main2 {
     public static void main(String[] args) {
         Product appleProduct=new Product();
         new Thread(new produceThread(appleProduct)).start();
